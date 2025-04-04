@@ -13,4 +13,3 @@ Our (Ballarat Hackerspace) goals are basically to help improve the vehicles thro
 - Better clips/fixtures for the hinged canopy that allow both the rider and people outside the vehicle to quickly open the canopy in the case of a crash. Currently has elastic hoops over hooks only on the inside, with no external access other than ripping it open.
 - Remove the corflute interior wheel covers which interfere with the riders hands when at full lock, and replace with wheel-hugging 3D printed covers that take up less space.
 - 3D printed covers for the axel bolt access holes.
-- 
