@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>EBT Lap Timer</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
+            crossorigin="anonymous"
+        />
+        <style>
+            body {
+                transition:
+                    background-color 0.3s ease,
+                    color 0.3s ease;
+            }
+            .timer-display {
+                font-variant-numeric: tabular-nums;
+            }
+            .card {
+                border-radius: 1rem;
+            }
+            .lap-list {
+                max-height: 50vh;
+                overflow-y: auto;
+            }
+            .sticky-title {
+                position: sticky;
+                top: 0;
+                background: var(--bs-body-bg);
+                z-index: 1;
+            }
+            /* Bigger touch targets */
+            .btn-lg {
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+            }
+        </style>
+    </head>
+    <body class="py-4">
+        <div class="container">
+            <h1 class="mb-4 text-center">EBT Lap Timer</h1>
+
+            <div class="row g-4">
+                <!-- Vehicle 1 -->
+                <div class="col-12 col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header sticky-title bg-primary-subtle">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h2 class="h4 mb-0">Vehicle 1</h2>
+                                <div class="flex-grow-1 ms-3">
+                                    <input
+                                        type="text"
+                                        class="form-control form-control-sm"
+                                        id="rider-v1"
+                                        placeholder="Enter rider name..."
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center mb-3">
+                                <div class="display-5 fw-bold timer-display" id="display-v1">00:00.00</div>
+                                <div class="text-muted small">Master timer (current rider)</div>
+                            </div>
+
+                            <div class="d-grid gap-2 mb-3">
+                                <button class="btn btn-success btn-lg" id="startStop-v1">Start</button>
+                                <button class="btn btn-primary btn-lg" id="lap-v1" disabled>Lap</button>
+                            </div>
+
+                            <h3 class="h6 text-uppercase text-muted">Laps</h3>
+                            <ol class="list-group list-group-numbered lap-list" id="laps-v1" aria-live="polite"></ol>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vehicle 2 -->
+                <div class="col-12 col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header sticky-title bg-danger-subtle">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h2 class="h4 mb-0">Vehicle 2</h2>
+                                <div class="flex-grow-1 ms-3">
+                                    <input
+                                        type="text"
+                                        class="form-control form-control-sm"
+                                        id="rider-v2"
+                                        placeholder="Enter rider name..."
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center mb-3">
+                                <div class="display-5 fw-bold timer-display" id="display-v2">00:00.00</div>
+                                <div class="text-muted small">Master timer (current rider)</div>
+                            </div>
+
+                            <div class="d-grid gap-2 mb-3">
+                                <button class="btn btn-success btn-lg" id="startStop-v2">Start</button>
+                                <button class="btn btn-primary btn-lg" id="lap-v2" disabled>Lap</button>
+                            </div>
+
+                            <h3 class="h6 text-uppercase text-muted">Laps</h3>
+                            <ol class="list-group list-group-numbered lap-list" id="laps-v2" aria-live="polite"></ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Session History Table -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h2 class="h4 mb-0">Session History</h2>
+                                <div>
+                                    <div class="btn-group me-2" role="group">
+                                        <button class="btn btn-outline-primary btn-sm" id="exportCSV">Export CSV</button>
+                                        <button class="btn btn-outline-primary btn-sm" id="exportJSON">Export JSON</button>
+                                    </div>
+                                    <button class="btn btn-outline-danger btn-sm" id="clearHistory">Clear All</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive" style="max-height: 60vh; overflow-y: auto">
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-dark sticky-top">
+                                        <tr>
+                                            <th>Rider</th>
+                                            <th>Start Time</th>
+                                            <th>End Time</th>
+                                            <th>Total Time</th>
+                                            <th>Lap Times</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="historyTableBody">
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted">No sessions recorded yet</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-5 py-4 border-top">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="mb-0 text-muted">
+                            <small
+                                >EBT Lap Timer - Built by
+                                <a href="https://www.ballarathackerspace.org.au/">Ballarat Hackerspace</a></small
+                            >
+                        </p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <button class="btn btn-outline-secondary btn-sm" id="themeToggle">
+                            <span id="themeIcon">🌙</span>
+                            <span id="themeText">Dark Mode</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+            crossorigin="anonymous"
+        ></script>
+
+        <script>
+            // --- Utilities ---
+            function formatTime(ms) {
+                // mm:ss.cc (centiseconds)
+                const totalCentis = Math.floor(ms / 10);
+                const minutes = Math.floor(totalCentis / 6000); // 6000 centiseconds = 1 minute
+                const seconds = Math.floor((totalCentis % 6000) / 100); // 100 centiseconds = 1 second
+                const centis = totalCentis % 100; // remaining centiseconds
+                const mm = String(minutes).padStart(2, "0");
+                const ss = String(seconds).padStart(2, "0");
+                const cc = String(centis).padStart(2, "0");
+                return `${mm}:${ss}.${cc}`;
+            }
+
+            function formatDateTime(date) {
+                const options = {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                };
+                return date.toLocaleDateString("en-US", options);
+            }
+
+            // --- Export Functions ---
+            function downloadFile(content, filename, contentType) {
+                const blob = new Blob([content], { type: contentType });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+
+            function exportToCSV() {
+                const sessions = loadSessions();
+                if (sessions.length === 0) {
+                    alert("No session data to export");
+                    return;
+                }
+
+                let csv = "Rider Name,Start Time,End Time,Total Time,Lap Count,Lap Times\n";
+
+                sessions.forEach((session) => {
+                    const startTime = formatDateTime(new Date(session.startTime));
+                    const endTime = formatDateTime(new Date(session.endTime));
+                    const totalTime = formatTime(session.totalTime);
+                    const lapCount = session.lapTimes.length;
+                    const lapTimes = session.lapTimes.map((time) => formatTime(time)).join("; ");
+
+                    csv += `"${session.riderName}","${startTime}","${endTime}","${totalTime}",${lapCount},"${lapTimes}"\n`;
+                });
+
+                const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, "-");
+                downloadFile(csv, `EBT_Lap_Times_${timestamp}.csv`, "text/csv");
+            }
+
+            function exportToJSON() {
+                const sessions = loadSessions();
+                if (sessions.length === 0) {
+                    alert("No session data to export");
+                    return;
+                }
+
+                const exportData = {
+                    exportDate: new Date().toISOString(),
+                    totalSessions: sessions.length,
+                    sessions: sessions.map((session) => ({
+                        ...session,
+                        startTime: new Date(session.startTime).toISOString(),
+                        endTime: new Date(session.endTime).toISOString(),
+                        totalTimeFormatted: formatTime(session.totalTime),
+                        lapTimesFormatted: session.lapTimes.map((time) => formatTime(time)),
+                    })),
+                };
+
+                const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, "-");
+                downloadFile(JSON.stringify(exportData, null, 2), `EBT_Lap_Times_${timestamp}.json`, "application/json");
+            }
+
+            // --- Theme Management ---
+            function loadTheme() {
+                const savedTheme = localStorage.getItem("ebtLapTimerTheme") || "light";
+                applyTheme(savedTheme);
+                return savedTheme;
+            }
+
+            function applyTheme(theme) {
+                const html = document.documentElement;
+                const themeIcon = document.getElementById("themeIcon");
+                const themeText = document.getElementById("themeText");
+
+                if (theme === "dark") {
+                    html.setAttribute("data-bs-theme", "dark");
+                    if (themeIcon) themeIcon.textContent = "☀️";
+                    if (themeText) themeText.textContent = "Light Mode";
+                } else {
+                    html.setAttribute("data-bs-theme", "light");
+                    if (themeIcon) themeIcon.textContent = "🌙";
+                    if (themeText) themeText.textContent = "Dark Mode";
+                }
+            }
+
+            function toggleTheme() {
+                const currentTheme = document.documentElement.getAttribute("data-bs-theme");
+                const newTheme = currentTheme === "dark" ? "light" : "dark";
+                applyTheme(newTheme);
+                localStorage.setItem("ebtLapTimerTheme", newTheme);
+            }
+
+            // --- Session Storage ---
+            function saveSession(riderName, startTime, endTime, totalTime, lapTimes) {
+                const sessions = JSON.parse(localStorage.getItem("ebtLapTimerSessions") || "[]");
+                const session = {
+                    id: Date.now(),
+                    riderName,
+                    startTime,
+                    endTime,
+                    totalTime,
+                    lapTimes,
+                };
+                sessions.push(session);
+                localStorage.setItem("ebtLapTimerSessions", JSON.stringify(sessions));
+                updateHistoryTable();
+            }
+
+            function loadSessions() {
+                return JSON.parse(localStorage.getItem("ebtLapTimerSessions") || "[]");
+            }
+
+            function clearAllSessions() {
+                localStorage.removeItem("ebtLapTimerSessions");
+                updateHistoryTable();
+            }
+
+            function updateHistoryTable() {
+                const sessions = loadSessions();
+                const tbody = document.getElementById("historyTableBody");
+
+                if (sessions.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No sessions recorded yet</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = sessions
+                    .map((session) => {
+                        // Find fastest lap time for this session
+                        const fastestLapTime = session.lapTimes.length > 0 ? Math.min(...session.lapTimes) : null;
+
+                        const lapTimesHtml = session.lapTimes
+                            .map((lapTime, index) => {
+                                const isFastest = fastestLapTime !== null && lapTime === fastestLapTime;
+                                const badgeClass = isFastest
+                                    ? "badge text-bg-success me-1 mb-1"
+                                    : "badge text-bg-secondary me-1 mb-1";
+                                return `<span class="${badgeClass}">Lap ${index + 1}: ${formatTime(lapTime)}</span>`;
+                            })
+                            .join("");
+
+                        return `
+                        <tr>
+                            <td class="fw-medium">${session.riderName}</td>
+                            <td>${formatDateTime(new Date(session.startTime))}</td>
+                            <td>${formatDateTime(new Date(session.endTime))}</td>
+                            <td class="fw-bold">${formatTime(session.totalTime)}</td>
+                            <td>${lapTimesHtml || '<span class="text-muted">No laps recorded</span>'}</td>
+                        </tr>
+                    `;
+                    })
+                    .join("");
+            }
+
+            // A simple per-vehicle timer controller
+            class Timer {
+                constructor(ids) {
+                    this.display = document.getElementById(ids.display);
+                    this.btnStartStop = document.getElementById(ids.startStop);
+                    this.btnLap = document.getElementById(ids.lap);
+                    this.lapList = document.getElementById(ids.laps);
+                    this.riderInput = document.getElementById(ids.rider);
+
+                    this.running = false;
+                    this._raf = null;
+                    this.startEpoch = 0; // ms since epoch when started
+                    this.accumulated = 0; // ms from previous runs (not used here but handy for future pause/resume)
+                    this.lastLapMark = 0; // ms for last lap split (relative to start)
+
+                    // Fastest lap tracking
+                    this.fastestLapTime = null;
+                    this.fastestLapElement = null;
+
+                    // Session tracking
+                    this.sessionStartTime = null;
+                    this.sessionEndTime = null;
+                    this.lapTimes = [];
+
+                    // Event wiring
+                    this.btnStartStop.addEventListener("click", () => this.toggle());
+                    this.btnLap.addEventListener("click", () => this.lap());
+
+                    // Clear input when user focuses to edit (but only if it contains generated name)
+                    this.riderInput.addEventListener("focus", () => {
+                        if (
+                            this.riderInput.value.startsWith("Rider ") &&
+                            this.riderInput.value.match(/\d{4}-\d{2}-\d{2}-\d{4}$/)
+                        ) {
+                            this.riderInput.value = "";
+                        }
+                    });
+                }
+
+                generateRiderName() {
+                    const now = new Date();
+                    const year = now.getFullYear();
+                    const month = String(now.getMonth() + 1).padStart(2, "0");
+                    const day = String(now.getDate()).padStart(2, "0");
+                    const hours = String(now.getHours()).padStart(2, "0");
+                    const minutes = String(now.getMinutes()).padStart(2, "0");
+                    return `Rider ${year}-${month}-${day}-${hours}${minutes}`;
+                }
+
+                getRiderName() {
+                    const inputValue = this.riderInput.value.trim();
+                    return inputValue || this.generateRiderName();
+                }
+
+                nowMs() {
+                    return performance.now();
+                }
+
+                toggle() {
+                    if (!this.running) {
+                        this.start();
+                    } else {
+                        this.finish();
+                    }
+                }
+
+                start() {
+                    // Set rider name if empty
+                    if (!this.riderInput.value.trim()) {
+                        this.riderInput.value = this.generateRiderName();
+                    }
+
+                    this.running = true;
+                    this.btnStartStop.textContent = "Finish";
+                    this.btnStartStop.classList.remove("btn-success");
+                    this.btnStartStop.classList.add("btn-danger");
+                    this.btnLap.disabled = false;
+
+                    this.startPerf = this.nowMs(); // high-res start
+                    this.lastLapMark = 0; // lap 1 starts at 0
+                    this.accumulated = 0; // fresh session per rider
+
+                    // Reset session data
+                    this.sessionStartTime = new Date();
+                    this.lapTimes = [];
+                    this.fastestLapTime = null;
+                    this.fastestLapElement = null;
+
+                    const tick = () => {
+                        if (!this.running) return;
+                        const elapsed = this.accumulated + (this.nowMs() - this.startPerf);
+                        this.display.textContent = formatTime(elapsed);
+                        this._raf = requestAnimationFrame(tick);
+                    };
+                    this._raf = requestAnimationFrame(tick);
+                }
+
+                finish() {
+                    this.running = false;
+                    cancelAnimationFrame(this._raf);
+
+                    // Calculate final time
+                    const totalTime = this.accumulated + (this.nowMs() - this.startPerf);
+                    this.sessionEndTime = new Date();
+
+                    // Save session to localStorage
+                    const riderName = this.getRiderName();
+                    saveSession(
+                        riderName,
+                        this.sessionStartTime,
+                        this.sessionEndTime,
+                        totalTime,
+                        [...this.lapTimes], // copy the array
+                    );
+
+                    // Reset UI
+                    this.btnStartStop.textContent = "Start";
+                    this.btnStartStop.classList.remove("btn-danger");
+                    this.btnStartStop.classList.add("btn-success");
+                    this.btnLap.disabled = true;
+
+                    // Clear lap list for next rider
+                    this.lapList.innerHTML = "";
+                }
+
+                lap() {
+                    if (!this.running) return;
+                    const elapsed = this.accumulated + (this.nowMs() - this.startPerf);
+                    const lapDuration = elapsed - this.lastLapMark;
+                    this.lastLapMark = elapsed;
+
+                    // Store lap time for session data
+                    this.lapTimes.push(lapDuration);
+
+                    const li = document.createElement("li");
+                    li.className = "list-group-item d-flex justify-content-between align-items-center";
+
+                    const badge = document.createElement("span");
+                    badge.className = "badge text-bg-secondary rounded-pill";
+                    badge.textContent = formatTime(lapDuration);
+
+                    li.innerHTML = `<span class="fw-medium">Lap ${this.lapList.children.length + 1}</span>`;
+                    li.appendChild(badge);
+
+                    // Insert newest lap at the top for quick visibility:
+                    this.lapList.insertBefore(li, this.lapList.firstChild);
+
+                    // Check if this is the fastest lap
+                    if (this.fastestLapTime === null || lapDuration < this.fastestLapTime) {
+                        // Remove highlighting from previous fastest lap
+                        if (this.fastestLapElement) {
+                            const oldBadge = this.fastestLapElement.querySelector(".badge");
+                            oldBadge.className = "badge text-bg-secondary rounded-pill";
+                            this.fastestLapElement.classList.remove("bg-success-subtle");
+                        }
+
+                        // Highlight new fastest lap
+                        this.fastestLapTime = lapDuration;
+                        this.fastestLapElement = li;
+                        badge.className = "badge text-bg-success rounded-pill";
+                        li.classList.add("bg-success-subtle");
+                    }
+                }
+            }
+
+            // Instantiate two independent timers
+            const v1 = new Timer({
+                display: "display-v1",
+                startStop: "startStop-v1",
+                lap: "lap-v1",
+                laps: "laps-v1",
+                rider: "rider-v1",
+            });
+            const v2 = new Timer({
+                display: "display-v2",
+                startStop: "startStop-v2",
+                lap: "lap-v2",
+                laps: "laps-v2",
+                rider: "rider-v2",
+            });
+
+            // Initialize history table on page load
+            document.addEventListener("DOMContentLoaded", () => {
+                // Load theme first
+                loadTheme();
+
+                updateHistoryTable();
+
+                // Wire up clear history button
+                document.getElementById("clearHistory").addEventListener("click", () => {
+                    if (confirm("Are you sure you want to clear all session history? This cannot be undone.")) {
+                        clearAllSessions();
+                    }
+                });
+
+                // Wire up export buttons
+                document.getElementById("exportCSV").addEventListener("click", exportToCSV);
+                document.getElementById("exportJSON").addEventListener("click", exportToJSON);
+
+                // Wire up theme toggle
+                document.getElementById("themeToggle").addEventListener("click", toggleTheme);
+            });
+
+            // Prevent double-tap zoom on iOS when mashing buttons mid-corner
+            document.addEventListener(
+                "touchend",
+                function (e) {
+                    const now = Date.now();
+                    if (window._lastTouchEnd && now - window._lastTouchEnd <= 300) {
+                        e.preventDefault();
+                    }
+                    window._lastTouchEnd = now;
+                },
+                { passive: false },
+            );
+        </script>
+    </body>
+</html>
