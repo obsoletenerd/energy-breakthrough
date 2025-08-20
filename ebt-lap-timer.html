@@ -267,6 +267,12 @@
                     </div>
                     <div class="col-md-6 text-md-end">
                         <button
+                            class="btn btn-outline-danger btn-sm me-2"
+                            id="clearAllData"
+                        >
+                            Clear All Data
+                        </button>
+                        <button
                             class="btn btn-outline-secondary btn-sm"
                             id="themeToggle"
                         >
@@ -452,7 +458,28 @@
             }
 
             function clearAllSessions() {
-                localStorage.removeItem("ebtLapTimer_sessions");
+                localStorage.removeItem("ebtLapTimerSessions");
+                updateHistoryTable();
+            }
+
+            function clearAllData() {
+                // Clear all localStorage data related to the app
+                localStorage.removeItem("ebtLapTimerSessions");
+                localStorage.removeItem("ebtLapTimer_vehicleNames");
+                localStorage.removeItem("ebtLapTimerTheme");
+
+                // Reset vehicle names to defaults
+                document.getElementById("vehicle-name-v1").value = "Vehicle 1";
+                document.getElementById("vehicle-name-v2").value = "Vehicle 2";
+
+                // Clear rider names
+                document.getElementById("rider-v1").value = "";
+                document.getElementById("rider-v2").value = "";
+
+                // Reset theme to light mode
+                applyTheme("light");
+
+                // Update history table
                 updateHistoryTable();
             }
 
@@ -766,6 +793,19 @@
                 document
                     .getElementById("themeToggle")
                     .addEventListener("click", toggleTheme);
+
+                // Wire up clear all data button
+                document
+                    .getElementById("clearAllData")
+                    .addEventListener("click", () => {
+                        if (
+                            confirm(
+                                "Are you sure you want to clear ALL data? This will remove all session history, vehicle names, rider names, and reset the theme. This cannot be undone.",
+                            )
+                        ) {
+                            clearAllData();
+                        }
+                    });
 
                 // Wire up vehicle name inputs to save changes
                 document
