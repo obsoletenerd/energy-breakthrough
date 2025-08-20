@@ -566,9 +566,25 @@
                                 const isFastest =
                                     fastestLapTime !== null &&
                                     lapTime === fastestLapTime;
-                                const badgeClass = isFastest
-                                    ? "badge text-bg-success me-1 mb-1"
-                                    : "badge text-bg-secondary me-1 mb-1";
+                                const slowestLapTime =
+                                    session.lapTimes.length > 0
+                                        ? Math.max(...session.lapTimes)
+                                        : null;
+                                const isSlowest =
+                                    slowestLapTime !== null &&
+                                    lapTime === slowestLapTime &&
+                                    session.lapTimes.length > 1; // Only highlight if more than one lap
+
+                                let badgeClass =
+                                    "badge text-bg-secondary me-1 mb-1";
+                                if (isFastest) {
+                                    badgeClass =
+                                        "badge text-bg-success me-1 mb-1";
+                                } else if (isSlowest) {
+                                    badgeClass =
+                                        "badge text-bg-warning me-1 mb-1";
+                                }
+
                                 return `<span class="${badgeClass}">${formatTime(
                                     lapTime,
                                 )}</span>`;
@@ -651,6 +667,10 @@
                     this.fastestLapTime = null;
                     this.fastestLapElement = null;
 
+                    // Slowest lap tracking
+                    this.slowestLapTime = null;
+                    this.slowestLapElement = null;
+
                     // Session tracking
                     this.sessionStartTime = null;
                     this.sessionEndTime = null;
@@ -723,6 +743,8 @@
                     this.lapTimes = [];
                     this.fastestLapTime = null;
                     this.fastestLapElement = null;
+                    this.slowestLapTime = null;
+                    this.slowestLapElement = null;
 
                     const tick = () => {
                         if (!this.running) return;
@@ -808,6 +830,37 @@
                         this.fastestLapElement = li;
                         badge.className = "badge text-bg-success rounded-pill";
                         li.classList.add("bg-success-subtle");
+                    }
+
+                    // Check if this is the slowest lap (only if we have more than one lap)
+                    if (this.lapTimes.length > 1) {
+                        if (
+                            this.slowestLapTime === null ||
+                            lapDuration > this.slowestLapTime
+                        ) {
+                            // Remove highlighting from previous slowest lap
+                            if (this.slowestLapElement) {
+                                const oldBadge =
+                                    this.slowestLapElement.querySelector(
+                                        ".badge",
+                                    );
+                                oldBadge.className =
+                                    "badge text-bg-secondary rounded-pill";
+                                this.slowestLapElement.classList.remove(
+                                    "bg-warning-subtle",
+                                );
+                            }
+
+                            // Don't highlight as slowest if it's also the fastest
+                            if (lapDuration !== this.fastestLapTime) {
+                                // Highlight new slowest lap
+                                this.slowestLapTime = lapDuration;
+                                this.slowestLapElement = li;
+                                badge.className =
+                                    "badge text-bg-warning rounded-pill";
+                                li.classList.add("bg-warning-subtle");
+                            }
+                        }
                     }
                 }
             }
