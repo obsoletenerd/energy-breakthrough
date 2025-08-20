@@ -32,6 +32,19 @@
                 background: var(--bs-body-bg);
                 z-index: 1;
             }
+            .vehicle-name-input {
+                background: transparent;
+                border: none;
+                font-size: 1.5rem;
+                font-weight: 500;
+                color: inherit;
+                width: auto;
+                min-width: 120px;
+            }
+            .vehicle-name-input:focus {
+                outline: 1px solid rgba(255, 255, 255, 0.5);
+                background: rgba(255, 255, 255, 0.1);
+            }
             /* Bigger touch targets */
             .btn-lg {
                 padding-top: 1rem;
@@ -48,8 +61,16 @@
                 <div class="col-12 col-md-6">
                     <div class="card shadow-sm">
                         <div class="card-header sticky-title bg-primary-subtle">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <h2 class="h4 mb-0">Vehicle 1</h2>
+                            <div
+                                class="d-flex align-items-center justify-content-between"
+                            >
+                                <input
+                                    type="text"
+                                    class="vehicle-name-input h4 mb-0"
+                                    id="vehicle-name-v1"
+                                    value="Vehicle 1"
+                                    placeholder="Vehicle Name"
+                                />
                                 <div class="flex-grow-1 ms-3">
                                     <input
                                         type="text"
@@ -62,17 +83,39 @@
                         </div>
                         <div class="card-body">
                             <div class="text-center mb-3">
-                                <div class="display-5 fw-bold timer-display" id="display-v1">00:00.00</div>
-                                <div class="text-muted small">Master timer (current rider)</div>
+                                <div
+                                    class="display-5 fw-bold timer-display"
+                                    id="display-v1"
+                                >
+                                    00:00.00
+                                </div>
+                                <div class="text-muted small">
+                                    Master timer (current rider)
+                                </div>
                             </div>
 
                             <div class="d-grid gap-2 mb-3">
-                                <button class="btn btn-success btn-lg" id="startStop-v1">Start</button>
-                                <button class="btn btn-primary btn-lg" id="lap-v1" disabled>Lap</button>
+                                <button
+                                    class="btn btn-success btn-lg"
+                                    id="startStop-v1"
+                                >
+                                    Start
+                                </button>
+                                <button
+                                    class="btn btn-primary btn-lg"
+                                    id="lap-v1"
+                                    disabled
+                                >
+                                    Lap
+                                </button>
                             </div>
 
                             <h3 class="h6 text-uppercase text-muted">Laps</h3>
-                            <ol class="list-group list-group-numbered lap-list" id="laps-v1" aria-live="polite"></ol>
+                            <ol
+                                class="list-group list-group-numbered lap-list"
+                                id="laps-v1"
+                                aria-live="polite"
+                            ></ol>
                         </div>
                     </div>
                 </div>
@@ -81,8 +124,16 @@
                 <div class="col-12 col-md-6">
                     <div class="card shadow-sm">
                         <div class="card-header sticky-title bg-danger-subtle">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <h2 class="h4 mb-0">Vehicle 2</h2>
+                            <div
+                                class="d-flex align-items-center justify-content-between"
+                            >
+                                <input
+                                    type="text"
+                                    class="vehicle-name-input h4 mb-0"
+                                    id="vehicle-name-v2"
+                                    value="Vehicle 2"
+                                    placeholder="Vehicle Name"
+                                />
                                 <div class="flex-grow-1 ms-3">
                                     <input
                                         type="text"
@@ -95,17 +146,39 @@
                         </div>
                         <div class="card-body">
                             <div class="text-center mb-3">
-                                <div class="display-5 fw-bold timer-display" id="display-v2">00:00.00</div>
-                                <div class="text-muted small">Master timer (current rider)</div>
+                                <div
+                                    class="display-5 fw-bold timer-display"
+                                    id="display-v2"
+                                >
+                                    00:00.00
+                                </div>
+                                <div class="text-muted small">
+                                    Master timer (current rider)
+                                </div>
                             </div>
 
                             <div class="d-grid gap-2 mb-3">
-                                <button class="btn btn-success btn-lg" id="startStop-v2">Start</button>
-                                <button class="btn btn-primary btn-lg" id="lap-v2" disabled>Lap</button>
+                                <button
+                                    class="btn btn-success btn-lg"
+                                    id="startStop-v2"
+                                >
+                                    Start
+                                </button>
+                                <button
+                                    class="btn btn-primary btn-lg"
+                                    id="lap-v2"
+                                    disabled
+                                >
+                                    Lap
+                                </button>
                             </div>
 
                             <h3 class="h6 text-uppercase text-muted">Laps</h3>
-                            <ol class="list-group list-group-numbered lap-list" id="laps-v2" aria-live="polite"></ol>
+                            <ol
+                                class="list-group list-group-numbered lap-list"
+                                id="laps-v2"
+                                aria-live="polite"
+                            ></ol>
                         </div>
                     </div>
                 </div>
@@ -116,19 +189,39 @@
                 <div class="col-12">
                     <div class="card shadow-sm">
                         <div class="card-header">
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div
+                                class="d-flex justify-content-between align-items-center"
+                            >
                                 <h2 class="h4 mb-0">Session History</h2>
                                 <div>
                                     <div class="btn-group me-2" role="group">
-                                        <button class="btn btn-outline-primary btn-sm" id="exportCSV">Export CSV</button>
-                                        <button class="btn btn-outline-primary btn-sm" id="exportJSON">Export JSON</button>
+                                        <button
+                                            class="btn btn-outline-primary btn-sm"
+                                            id="exportCSV"
+                                        >
+                                            Export CSV
+                                        </button>
+                                        <button
+                                            class="btn btn-outline-primary btn-sm"
+                                            id="exportJSON"
+                                        >
+                                            Export JSON
+                                        </button>
                                     </div>
-                                    <button class="btn btn-outline-danger btn-sm" id="clearHistory">Clear All</button>
+                                    <button
+                                        class="btn btn-outline-danger btn-sm"
+                                        id="clearHistory"
+                                    >
+                                        Clear All
+                                    </button>
                                 </div>
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive" style="max-height: 60vh; overflow-y: auto">
+                            <div
+                                class="table-responsive"
+                                style="max-height: 60vh; overflow-y: auto"
+                            >
                                 <table class="table table-striped table-hover">
                                     <thead class="table-dark sticky-top">
                                         <tr>
@@ -141,7 +234,12 @@
                                     </thead>
                                     <tbody id="historyTableBody">
                                         <tr>
-                                            <td colspan="5" class="text-center text-muted">No sessions recorded yet</td>
+                                            <td
+                                                colspan="5"
+                                                class="text-center text-muted"
+                                            >
+                                                No sessions recorded yet
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -160,12 +258,18 @@
                         <p class="mb-0 text-muted">
                             <small
                                 >EBT Lap Timer - Built by
-                                <a href="https://www.ballarathackerspace.org.au/">Ballarat Hackerspace</a></small
+                                <a
+                                    href="https://www.ballarathackerspace.org.au/"
+                                    >Ballarat Hackerspace</a
+                                ></small
                             >
                         </p>
                     </div>
                     <div class="col-md-6 text-md-end">
-                        <button class="btn btn-outline-secondary btn-sm" id="themeToggle">
+                        <button
+                            class="btn btn-outline-secondary btn-sm"
+                            id="themeToggle"
+                        >
                             <span id="themeIcon">🌙</span>
                             <span id="themeText">Dark Mode</span>
                         </button>
@@ -226,19 +330,27 @@
                     return;
                 }
 
-                let csv = "Rider Name,Start Time,End Time,Total Time,Lap Count,Lap Times\n";
+                let csv =
+                    "Rider Name,Start Time,End Time,Total Time,Lap Count,Lap Times\n";
 
                 sessions.forEach((session) => {
-                    const startTime = formatDateTime(new Date(session.startTime));
+                    const startTime = formatDateTime(
+                        new Date(session.startTime),
+                    );
                     const endTime = formatDateTime(new Date(session.endTime));
                     const totalTime = formatTime(session.totalTime);
                     const lapCount = session.lapTimes.length;
-                    const lapTimes = session.lapTimes.map((time) => formatTime(time)).join("; ");
+                    const lapTimes = session.lapTimes
+                        .map((time) => formatTime(time))
+                        .join("; ");
 
                     csv += `"${session.riderName}","${startTime}","${endTime}","${totalTime}",${lapCount},"${lapTimes}"\n`;
                 });
 
-                const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, "-");
+                const timestamp = new Date()
+                    .toISOString()
+                    .slice(0, 19)
+                    .replace(/:/g, "-");
                 downloadFile(csv, `EBT_Lap_Times_${timestamp}.csv`, "text/csv");
             }
 
@@ -257,17 +369,27 @@
                         startTime: new Date(session.startTime).toISOString(),
                         endTime: new Date(session.endTime).toISOString(),
                         totalTimeFormatted: formatTime(session.totalTime),
-                        lapTimesFormatted: session.lapTimes.map((time) => formatTime(time)),
+                        lapTimesFormatted: session.lapTimes.map((time) =>
+                            formatTime(time),
+                        ),
                     })),
                 };
 
-                const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, "-");
-                downloadFile(JSON.stringify(exportData, null, 2), `EBT_Lap_Times_${timestamp}.json`, "application/json");
+                const timestamp = new Date()
+                    .toISOString()
+                    .slice(0, 19)
+                    .replace(/:/g, "-");
+                downloadFile(
+                    JSON.stringify(exportData, null, 2),
+                    `EBT_Lap_Times_${timestamp}.json`,
+                    "application/json",
+                );
             }
 
             // --- Theme Management ---
             function loadTheme() {
-                const savedTheme = localStorage.getItem("ebtLapTimerTheme") || "light";
+                const savedTheme =
+                    localStorage.getItem("ebtLapTimerTheme") || "light";
                 applyTheme(savedTheme);
                 return savedTheme;
             }
@@ -289,15 +411,24 @@
             }
 
             function toggleTheme() {
-                const currentTheme = document.documentElement.getAttribute("data-bs-theme");
+                const currentTheme =
+                    document.documentElement.getAttribute("data-bs-theme");
                 const newTheme = currentTheme === "dark" ? "light" : "dark";
                 applyTheme(newTheme);
                 localStorage.setItem("ebtLapTimerTheme", newTheme);
             }
 
             // --- Session Storage ---
-            function saveSession(riderName, startTime, endTime, totalTime, lapTimes) {
-                const sessions = JSON.parse(localStorage.getItem("ebtLapTimerSessions") || "[]");
+            function saveSession(
+                riderName,
+                startTime,
+                endTime,
+                totalTime,
+                lapTimes,
+            ) {
+                const sessions = JSON.parse(
+                    localStorage.getItem("ebtLapTimerSessions") || "[]",
+                );
                 const session = {
                     id: Date.now(),
                     riderName,
@@ -307,17 +438,58 @@
                     lapTimes,
                 };
                 sessions.push(session);
-                localStorage.setItem("ebtLapTimerSessions", JSON.stringify(sessions));
+                localStorage.setItem(
+                    "ebtLapTimerSessions",
+                    JSON.stringify(sessions),
+                );
                 updateHistoryTable();
             }
 
             function loadSessions() {
-                return JSON.parse(localStorage.getItem("ebtLapTimerSessions") || "[]");
+                return JSON.parse(
+                    localStorage.getItem("ebtLapTimerSessions") || "[]",
+                );
             }
 
             function clearAllSessions() {
-                localStorage.removeItem("ebtLapTimerSessions");
+                localStorage.removeItem("ebtLapTimer_sessions");
                 updateHistoryTable();
+            }
+
+            // Vehicle name management
+            function saveVehicleNames() {
+                const v1Name = document.getElementById("vehicle-name-v1").value;
+                const v2Name = document.getElementById("vehicle-name-v2").value;
+                const vehicleNames = { v1: v1Name, v2: v2Name };
+                localStorage.setItem(
+                    "ebtLapTimer_vehicleNames",
+                    JSON.stringify(vehicleNames),
+                );
+            }
+
+            function loadVehicleNames() {
+                const saved = localStorage.getItem("ebtLapTimer_vehicleNames");
+                if (saved) {
+                    try {
+                        const vehicleNames = JSON.parse(saved);
+                        document.getElementById("vehicle-name-v1").value =
+                            vehicleNames.v1 || "Vehicle 1";
+                        document.getElementById("vehicle-name-v2").value =
+                            vehicleNames.v2 || "Vehicle 2";
+                    } catch (e) {
+                        // If parsing fails, use defaults
+                        document.getElementById("vehicle-name-v1").value =
+                            "Vehicle 1";
+                        document.getElementById("vehicle-name-v2").value =
+                            "Vehicle 2";
+                    }
+                } else {
+                    // No saved names, use defaults
+                    document.getElementById("vehicle-name-v1").value =
+                        "Vehicle 1";
+                    document.getElementById("vehicle-name-v2").value =
+                        "Vehicle 2";
+                }
             }
 
             function updateHistoryTable() {
@@ -325,18 +497,24 @@
                 const tbody = document.getElementById("historyTableBody");
 
                 if (sessions.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No sessions recorded yet</td></tr>';
+                    tbody.innerHTML =
+                        '<tr><td colspan="5" class="text-center text-muted">No sessions recorded yet</td></tr>';
                     return;
                 }
 
                 tbody.innerHTML = sessions
                     .map((session) => {
                         // Find fastest lap time for this session
-                        const fastestLapTime = session.lapTimes.length > 0 ? Math.min(...session.lapTimes) : null;
+                        const fastestLapTime =
+                            session.lapTimes.length > 0
+                                ? Math.min(...session.lapTimes)
+                                : null;
 
                         const lapTimesHtml = session.lapTimes
                             .map((lapTime, index) => {
-                                const isFastest = fastestLapTime !== null && lapTime === fastestLapTime;
+                                const isFastest =
+                                    fastestLapTime !== null &&
+                                    lapTime === fastestLapTime;
                                 const badgeClass = isFastest
                                     ? "badge text-bg-success me-1 mb-1"
                                     : "badge text-bg-secondary me-1 mb-1";
@@ -382,14 +560,18 @@
                     this.lapTimes = [];
 
                     // Event wiring
-                    this.btnStartStop.addEventListener("click", () => this.toggle());
+                    this.btnStartStop.addEventListener("click", () =>
+                        this.toggle(),
+                    );
                     this.btnLap.addEventListener("click", () => this.lap());
 
                     // Clear input when user focuses to edit (but only if it contains generated name)
                     this.riderInput.addEventListener("focus", () => {
                         if (
                             this.riderInput.value.startsWith("Rider ") &&
-                            this.riderInput.value.match(/\d{4}-\d{2}-\d{2}-\d{4}$/)
+                            this.riderInput.value.match(
+                                /\d{4}-\d{2}-\d{2}-\d{4}$/,
+                            )
                         ) {
                             this.riderInput.value = "";
                         }
@@ -447,7 +629,8 @@
 
                     const tick = () => {
                         if (!this.running) return;
-                        const elapsed = this.accumulated + (this.nowMs() - this.startPerf);
+                        const elapsed =
+                            this.accumulated + (this.nowMs() - this.startPerf);
                         this.display.textContent = formatTime(elapsed);
                         this._raf = requestAnimationFrame(tick);
                     };
@@ -459,7 +642,8 @@
                     cancelAnimationFrame(this._raf);
 
                     // Calculate final time
-                    const totalTime = this.accumulated + (this.nowMs() - this.startPerf);
+                    const totalTime =
+                        this.accumulated + (this.nowMs() - this.startPerf);
                     this.sessionEndTime = new Date();
 
                     // Save session to localStorage
@@ -484,7 +668,8 @@
 
                 lap() {
                     if (!this.running) return;
-                    const elapsed = this.accumulated + (this.nowMs() - this.startPerf);
+                    const elapsed =
+                        this.accumulated + (this.nowMs() - this.startPerf);
                     const lapDuration = elapsed - this.lastLapMark;
                     this.lastLapMark = elapsed;
 
@@ -492,7 +677,8 @@
                     this.lapTimes.push(lapDuration);
 
                     const li = document.createElement("li");
-                    li.className = "list-group-item d-flex justify-content-between align-items-center";
+                    li.className =
+                        "list-group-item d-flex justify-content-between align-items-center";
 
                     const badge = document.createElement("span");
                     badge.className = "badge text-bg-secondary rounded-pill";
@@ -505,12 +691,19 @@
                     this.lapList.insertBefore(li, this.lapList.firstChild);
 
                     // Check if this is the fastest lap
-                    if (this.fastestLapTime === null || lapDuration < this.fastestLapTime) {
+                    if (
+                        this.fastestLapTime === null ||
+                        lapDuration < this.fastestLapTime
+                    ) {
                         // Remove highlighting from previous fastest lap
                         if (this.fastestLapElement) {
-                            const oldBadge = this.fastestLapElement.querySelector(".badge");
-                            oldBadge.className = "badge text-bg-secondary rounded-pill";
-                            this.fastestLapElement.classList.remove("bg-success-subtle");
+                            const oldBadge =
+                                this.fastestLapElement.querySelector(".badge");
+                            oldBadge.className =
+                                "badge text-bg-secondary rounded-pill";
+                            this.fastestLapElement.classList.remove(
+                                "bg-success-subtle",
+                            );
                         }
 
                         // Highlight new fastest lap
@@ -543,21 +736,44 @@
                 // Load theme first
                 loadTheme();
 
+                // Load vehicle names
+                loadVehicleNames();
+
                 updateHistoryTable();
 
                 // Wire up clear history button
-                document.getElementById("clearHistory").addEventListener("click", () => {
-                    if (confirm("Are you sure you want to clear all session history? This cannot be undone.")) {
-                        clearAllSessions();
-                    }
-                });
+                document
+                    .getElementById("clearHistory")
+                    .addEventListener("click", () => {
+                        if (
+                            confirm(
+                                "Are you sure you want to clear all session history? This cannot be undone.",
+                            )
+                        ) {
+                            clearAllSessions();
+                        }
+                    });
 
                 // Wire up export buttons
-                document.getElementById("exportCSV").addEventListener("click", exportToCSV);
-                document.getElementById("exportJSON").addEventListener("click", exportToJSON);
+                document
+                    .getElementById("exportCSV")
+                    .addEventListener("click", exportToCSV);
+                document
+                    .getElementById("exportJSON")
+                    .addEventListener("click", exportToJSON);
 
                 // Wire up theme toggle
-                document.getElementById("themeToggle").addEventListener("click", toggleTheme);
+                document
+                    .getElementById("themeToggle")
+                    .addEventListener("click", toggleTheme);
+
+                // Wire up vehicle name inputs to save changes
+                document
+                    .getElementById("vehicle-name-v1")
+                    .addEventListener("input", saveVehicleNames);
+                document
+                    .getElementById("vehicle-name-v2")
+                    .addEventListener("input", saveVehicleNames);
             });
 
             // Prevent double-tap zoom on iOS when mashing buttons mid-corner
@@ -565,7 +781,10 @@
                 "touchend",
                 function (e) {
                     const now = Date.now();
-                    if (window._lastTouchEnd && now - window._lastTouchEnd <= 300) {
+                    if (
+                        window._lastTouchEnd &&
+                        now - window._lastTouchEnd <= 300
+                    ) {
                         e.preventDefault();
                     }
                     window._lastTouchEnd = now;
