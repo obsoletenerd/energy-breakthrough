@@ -483,6 +483,21 @@
                 updateHistoryTable();
             }
 
+            function updateSessionRiderName(sessionId, newName) {
+                const sessions = loadSessions();
+                const sessionIndex = sessions.findIndex(
+                    (session) => session.id === sessionId,
+                );
+                if (sessionIndex !== -1) {
+                    sessions[sessionIndex].riderName = newName;
+                    localStorage.setItem(
+                        "ebtLapTimerSessions",
+                        JSON.stringify(sessions),
+                    );
+                    updateHistoryTable();
+                }
+            }
+
             // Vehicle name management
             function saveVehicleNames() {
                 const v1Name = document.getElementById("vehicle-name-v1").value;
@@ -545,21 +560,67 @@
                                 const badgeClass = isFastest
                                     ? "badge text-bg-success me-1 mb-1"
                                     : "badge text-bg-secondary me-1 mb-1";
-                                return `<span class="${badgeClass}">Lap ${index + 1}: ${formatTime(lapTime)}</span>`;
+                                return `<span class="${badgeClass}">${formatTime(
+                                    lapTime,
+                                )}</span>`;
                             })
                             .join("");
 
                         return `
-                        <tr>
-                            <td class="fw-medium">${session.riderName}</td>
-                            <td>${formatDateTime(new Date(session.startTime))}</td>
-                            <td>${formatDateTime(new Date(session.endTime))}</td>
-                            <td class="fw-bold">${formatTime(session.totalTime)}</td>
-                            <td>${lapTimesHtml || '<span class="text-muted">No laps recorded</span>'}</td>
-                        </tr>
-                    `;
+                    <tr>
+                        <td><span class="editable-rider-name" data-session-id="${session.id}" style="cursor: pointer; text-decoration: underline dotted; color: #0d6efd;" title="Click to edit">${session.riderName}</span></td>
+                        <td>${formatDateTime(new Date(session.startTime))}</td>
+                        <td>${formatDateTime(new Date(session.endTime))}</td>
+                        <td>${formatTime(session.totalTime)}</td>
+                        <td>${lapTimesHtml || "No laps"}</td>
+                    </tr>
+                `;
                     })
                     .join("");
+
+                // Add click handlers for editable rider names
+                document
+                    .querySelectorAll(".editable-rider-name")
+                    .forEach((element) => {
+                        element.addEventListener("click", function () {
+                            const sessionId = parseInt(this.dataset.sessionId);
+                            const currentName = this.textContent;
+
+                            // Create input element
+                            const input = document.createElement("input");
+                            input.type = "text";
+                            input.value = currentName;
+                            input.className = "form-control form-control-sm";
+                            input.style.width = "auto";
+                            input.style.minWidth = "150px";
+
+                            // Replace span with input
+                            this.parentNode.replaceChild(input, this);
+                            input.focus();
+                            input.select();
+
+                            // Save on enter or blur
+                            const saveEdit = () => {
+                                const newName =
+                                    input.value.trim() || currentName;
+                                updateSessionRiderName(sessionId, newName);
+                            };
+
+                            input.addEventListener("blur", saveEdit);
+                            input.addEventListener("keypress", (e) => {
+                                if (e.key === "Enter") {
+                                    input.blur();
+                                }
+                            });
+
+                            // Cancel on escape
+                            input.addEventListener("keydown", (e) => {
+                                if (e.key === "Escape") {
+                                    updateHistoryTable(); // Refresh to restore original
+                                }
+                            });
+                        });
+                    });
             }
 
             // A simple per-vehicle timer controller
