@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://mjkhv6d5q4ee"]
+
+[ext_resource type="PackedScene" uid="uid://cwtcb110u7wsi" path="res://assets/OSM-3D.blend" id="1_qc2vc"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_suxg3"]
+albedo_color = Color(6.97896e-07, 0.481435, 0.224214, 1)
+
+[node name="OSM-3D" instance=ExtResource("1_qc2vc")]
+
+[node name="Terrain" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.14424, 0)
+surface_material_override/0 = SubResource("StandardMaterial3D_suxg3")
+
+[node name="Terrain_envelope" parent="." index="1"]
+visible = false
+
+[node name="Sun" parent="." index="2"]
+visible = false

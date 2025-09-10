@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=3 uid="uid://wjvclikpn0el"]
+
+[ext_resource type="Script" uid="uid://b45x5el0ae576" path="res://scripts/trike.gd" id="1_qcgbx"]
+[ext_resource type="PackedScene" uid="uid://bafkt5g6e2tnu" path="res://assets/EBT-Frame.glb" id="1_qx6oe"]
+[ext_resource type="PackedScene" uid="uid://bc8ytrs14s4m" path="res://assets/EBT-Wheel.glb" id="2_qcgbx"]
+[ext_resource type="Script" uid="uid://c6l6jgwisfotv" path="res://scripts/serial_trike.gd" id="4_7hsil"]
+
+[node name="Trike" type="Node3D"]
+script = ExtResource("1_qcgbx")
+wheel_fl_path = NodePath("Wheel-FL")
+wheel_fr_path = NodePath("Wheel-FR")
+wheel_r_path = NodePath("Wheel-R")
+invert_steer = true
+provider_type = 2
+
+[node name="EBT-Frame" parent="." instance=ExtResource("1_qx6oe")]
+
+[node name="Wheel-FR" parent="." instance=ExtResource("2_qcgbx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.391983, 0, -0.500263)
+
+[node name="Wheel-FL" parent="." instance=ExtResource("2_qcgbx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.405597, 0, -0.500263)
+
+[node name="Wheel-R" parent="." instance=ExtResource("2_qcgbx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.982329)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.886842, 0.462074, 0, -0.462074, 0.886842, 0, 0.995828, 1.36828)
+
+[node name="SerialTrike" type="Node" parent="."]
+script = ExtResource("4_7hsil")
+port_name = "/dev/cu.usbmodem831101"
+trike_path = NodePath("..")
