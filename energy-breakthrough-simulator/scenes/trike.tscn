@@ -1,31 +1,46 @@
-[gd_scene load_steps=5 format=3 uid="uid://wjvclikpn0el"]
+[gd_scene load_steps=6 format=3 uid="uid://wjvclikpn0el"]
 
 [ext_resource type="Script" uid="uid://b45x5el0ae576" path="res://scripts/trike.gd" id="1_qcgbx"]
 [ext_resource type="PackedScene" uid="uid://bafkt5g6e2tnu" path="res://assets/EBT-Frame.glb" id="1_qx6oe"]
 [ext_resource type="PackedScene" uid="uid://bc8ytrs14s4m" path="res://assets/EBT-Wheel.glb" id="2_qcgbx"]
 [ext_resource type="Script" uid="uid://c6l6jgwisfotv" path="res://scripts/serial_trike.gd" id="4_7hsil"]
 
-[node name="Trike" type="Node3D"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_7hsil"]
+size = Vector3(1, 1.62109, 0.600586)
+
+[node name="Trike" type="CharacterBody3D"]
 script = ExtResource("1_qcgbx")
 wheel_fl_path = NodePath("Wheel-FL")
 wheel_fr_path = NodePath("Wheel-FR")
 wheel_r_path = NodePath("Wheel-R")
+wheel_fl_mesh_path = NodePath("Wheel-FL/Wheel-FL-Mesh")
+wheel_fr_mesh_path = NodePath("Wheel-FR/Wheel-FR-Mesh")
+wheel_r_mesh_path = NodePath("Wheel-R")
 invert_steer = true
-provider_type = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.0769326, 0.232422)
+shape = SubResource("BoxShape3D_7hsil")
 
 [node name="EBT-Frame" parent="." instance=ExtResource("1_qx6oe")]
 
-[node name="Wheel-FR" parent="." instance=ExtResource("2_qcgbx")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.391983, 0, -0.500263)
+[node name="Wheel-FL" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 0, -0.5)
 
-[node name="Wheel-FL" parent="." instance=ExtResource("2_qcgbx")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.405597, 0, -0.500263)
+[node name="Wheel-FL-Mesh" parent="Wheel-FL" instance=ExtResource("2_qcgbx")]
+
+[node name="Wheel-FR" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0, -0.5)
+
+[node name="Wheel-FR-Mesh" parent="Wheel-FR" instance=ExtResource("2_qcgbx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.008017, 0, -0.000262976)
 
 [node name="Wheel-R" parent="." instance=ExtResource("2_qcgbx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.982329)
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.886842, 0.462074, 0, -0.462074, 0.886842, 0, 0.995828, 1.36828)
+current = true
 
 [node name="SerialTrike" type="Node" parent="."]
 script = ExtResource("4_7hsil")
