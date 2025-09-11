@@ -1,9 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://wjvclikpn0el"]
+[gd_scene load_steps=8 format=3 uid="uid://wjvclikpn0el"]
 
 [ext_resource type="Script" uid="uid://b45x5el0ae576" path="res://scripts/trike.gd" id="1_qcgbx"]
 [ext_resource type="PackedScene" uid="uid://bafkt5g6e2tnu" path="res://assets/EBT-Frame.glb" id="1_qx6oe"]
 [ext_resource type="PackedScene" uid="uid://bc8ytrs14s4m" path="res://assets/EBT-Wheel.glb" id="2_qcgbx"]
 [ext_resource type="Script" uid="uid://c6l6jgwisfotv" path="res://scripts/serial_trike.gd" id="4_7hsil"]
+[ext_resource type="Script" uid="uid://defbefupguh0e" path="res://scripts/camera.gd" id="4_aieqt"]
+[ext_resource type="PackedScene" uid="uid://bvdqoewngq4vw" path="res://assets/Rider.glb" id="6_ke7jv"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7hsil"]
 size = Vector3(1, 1.62109, 0.600586)
@@ -19,30 +21,36 @@ wheel_r_mesh_path = NodePath("Wheel-R")
 invert_steer = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.0769326, 0.232422)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.30644, -0.769141)
 shape = SubResource("BoxShape3D_7hsil")
 
 [node name="EBT-Frame" parent="." instance=ExtResource("1_qx6oe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.229508, -1.00156)
 
 [node name="Wheel-FL" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 0, -0.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 0.229508, -1.50156)
 
 [node name="Wheel-FL-Mesh" parent="Wheel-FL" instance=ExtResource("2_qcgbx")]
 
 [node name="Wheel-FR" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0, -0.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0.229508, -1.50156)
 
 [node name="Wheel-FR-Mesh" parent="Wheel-FR" instance=ExtResource("2_qcgbx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.008017, 0, -0.000262976)
 
 [node name="Wheel-R" parent="." instance=ExtResource("2_qcgbx")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.982329)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.229508, -0.0192338)
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.886842, 0.462074, 0, -0.462074, 0.886842, 0, 0.995828, 1.36828)
+transform = Transform3D(1, 0, 0, 0, 0.994801, 0.101838, 0, -0.101838, 0.994801, 0, 1.02283, 0.0664972)
 current = true
+script = ExtResource("4_aieqt")
+target_path = NodePath("..")
 
 [node name="SerialTrike" type="Node" parent="."]
 script = ExtResource("4_7hsil")
 port_name = "/dev/cu.usbmodem831101"
 trike_path = NodePath("..")
+
+[node name="Rider" parent="." instance=ExtResource("6_ke7jv")]
+transform = Transform3D(-1, 0, 8.74228e-08, 8.65579e-08, 0.140314, 0.990107, -1.22666e-08, 0.990107, -0.140314, -0.652435, -0.148235, -2.00999)

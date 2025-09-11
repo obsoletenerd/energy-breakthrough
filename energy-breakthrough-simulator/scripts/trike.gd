@@ -9,6 +9,8 @@ var _spawn_transform: Transform3D           # recorded at _ready()
 @export var wheel_fr_path: NodePath
 @export var wheel_r_path: NodePath
 
+@export var front_track_m: float = 0.8  # meters between front wheels
+
 # If you split yaw (pivot) vs roll (mesh), point these to the mesh nodes otherwise leave empty to fall back.
 @export var wheel_fl_mesh_path: NodePath
 @export var wheel_fr_mesh_path: NodePath
@@ -33,7 +35,7 @@ enum ControlMode { KEYBOARD, SERIAL }
 
 # Wheel roll visuals
 @export var wheel_radius_m: float = 0.165
-@export var roll_direction: int = 1 # flip if rolling backwards
+@export var roll_direction: int = -1 # flip if rolling backwards
 
 # Simple vehicle dynamics
 @export var wheel_base_m: float = 1.2
@@ -116,8 +118,25 @@ func _physics_process(delta: float) -> void:
 	var speed_deg_per_s: float = (return_speed_deg_per_s if axis == 0.0 else steer_speed_deg_per_s)
 	_current_steer_deg = _move_toward_angle(_current_steer_deg, _target_steer_deg, speed_deg_per_s * delta)
 
-	_apply_steer_to_wheel(_wheel_fl, _orig_rot_fl, _current_steer_deg)
-	_apply_steer_to_wheel(_wheel_fr, _orig_rot_fr, _current_steer_deg)
+	# Ackermann steering angles (visual only)
+	if absf(_current_steer_deg) > 0.001:
+		var steer = deg_to_rad(_current_steer_deg)
+		var L = wheel_base_m
+		var half_track = front_track_m * 0.5
+
+		var R = L / tan(steer)
+		var inner = atan(L / (R - half_track))
+		var outer = atan(L / (R + half_track))
+
+		if steer > 0.0:  # turning right → right wheel inner
+			_apply_steer_to_wheel(_wheel_fr, _orig_rot_fr, rad_to_deg(inner))
+			_apply_steer_to_wheel(_wheel_fl, _orig_rot_fl, rad_to_deg(outer))
+		else:            # turning left → left wheel inner
+			_apply_steer_to_wheel(_wheel_fl, _orig_rot_fl, rad_to_deg(inner))
+			_apply_steer_to_wheel(_wheel_fr, _orig_rot_fr, rad_to_deg(outer))
+	else:
+		_apply_steer_to_wheel(_wheel_fl, _orig_rot_fl, 0.0)
+		_apply_steer_to_wheel(_wheel_fr, _orig_rot_fr, 0.0)
 
 	# Throttle/Speed
 	match control_mode:
@@ -139,21 +158,36 @@ func _physics_process(delta: float) -> void:
 	# Clamp top speed
 	_speed_mps = clampf(_speed_mps, -0.25 * max_speed_mps, max_speed_mps)
 
-	# Heading and movement
+	# Heading and movement  — arc integration (average heading)
 	var steer_rad: float = deg_to_rad(_current_steer_deg)
+
+	# Yaw rate from bicycle model
 	var yaw_rate: float = 0.0
 	if absf(steer_rad) > 0.0001 and wheel_base_m > 0.0001:
 		yaw_rate = (_speed_mps / wheel_base_m) * tan(steer_rad)
-	rotation.y += yaw_rate * delta
 
-	var forward: Vector3 = -global_transform.basis.z
-	forward.y = 0.0
-	forward = forward.normalized()
-	var horizontal_velocity: Vector3 = forward * _speed_mps
+	# Current forward BEFORE turning this frame
+	var f0: Vector3 = -global_transform.basis.z
+	f0.y = 0.0
+	f0 = f0.normalized()
 
-	velocity.x = horizontal_velocity.x
-	velocity.z = horizontal_velocity.z
+	# End-of-frame heading after turning by yaw_delta
+	var yaw_delta := yaw_rate * delta
+	var rot_y := Basis(Vector3.UP, yaw_delta)
+	var f1 := (rot_y * f0).normalized()
+
+	# Move along the average heading (traces an arc)
+	var v_dir := (f0 + f1)
+	if v_dir.length() > 0.00001:
+		v_dir = v_dir.normalized()
+
+	velocity.x = v_dir.x * _speed_mps
+	velocity.z = v_dir.z * _speed_mps
 	velocity.y += -gravity_mps2 * delta
+
+	# Advance rotation AFTER queuing motion, so next frame's f0 is correct
+	rotation.y += yaw_delta
+
 
 	# Wheel roll visuals
 	if wheel_radius_m > 0.0001:
